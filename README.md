@@ -76,7 +76,7 @@ The ```ebpf/whitelist.c``` filter provides two maps called ```allow4``` and
 ```allow6``` to which the above command dynamically adds the subnets
 127.0.0.1/24 and ::1/128. You can of course add more and/or different subnets.
 
-## This seems cool. But I bet its slow as hell right?
+## This seems cool. But I bet it's slow as hell right?
 
 No, not really:
 
