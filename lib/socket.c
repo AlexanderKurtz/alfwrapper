@@ -68,20 +68,6 @@ int socket_create (struct addrinfo* addrinfo) {
 	return sockfd;
 }
 
-int socket_client (const char* addr, const char* port, socktype type) {
-	struct addrinfo* addrinfo = socket_lookup (addr, port, type);
-	int sockfd = socket_create (addrinfo);
-	socket_connect (sockfd, addrinfo);
-	return sockfd;
-}
-
-int socket_server (const char* addr, const char* port, socktype type) {
-	struct addrinfo* addrinfo = socket_lookup (addr, port, type);
-	int sockfd = socket_create (addrinfo);
-	socket_bind (sockfd, addrinfo);
-	return sockfd;
-}
-
 /* listen() with error checking */
 void socket_listen (int sockfd) {
 	int r = listen (sockfd, 10);
