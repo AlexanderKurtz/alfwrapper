@@ -1,11 +1,11 @@
-#include <alfwrapper/argv.h>    // for argv_option, argv_finish
-#include <alfwrapper/bcc.h>     // for bcc_attach, bcc_load, bcc_set
-#include <alfwrapper/die.h>     // for die
-#include <alfwrapper/parse.h>   // for mapspec, parse_mapspec
-#include <alfwrapper/socket.h>  // for socket_listen, socket_pass, socket_se...
-#include <stddef.h>             // for NULL
-#include <stdlib.h>             // for realloc
-#include <sys/socket.h>         // for SOCK_STREAM
+#include <alfwrapper/argv.h>                    // for argv_option, argv_finish
+#include <alfwrapper/bcc.h>                     // for bcc_attach, bcc_load
+#include <alfwrapper/die.h>                     // for die
+#include <alfwrapper/parse.h>                   // for mapspec, parse_mapspec
+#include <alfwrapper/socket.h>                  // for socket_bind, socket_c...
+#include <stddef.h>                             // for NULL
+#include <stdlib.h>                             // for realloc
+#include <sys/socket.h>                         // for SOCK_STREAM
 
 static const char*    address   = "::";
 static const char*    port      = "4242";
@@ -51,10 +51,10 @@ int main (int argc, char** argv) {
 	}
 
 	/* Look up the address and port */
-	struct addrinfo* addrinfo = socket_lookup (address, port);
+	struct addrinfo* addrinfo = socket_lookup (address, port, type);
 
 	/* Create the server socket */
-	int sockfd = socket_create (addrinfo, type);
+	int sockfd = socket_create (addrinfo);
 
 	/* Bind the socket to the specified address */
 	socket_bind (sockfd, addrinfo);
@@ -70,8 +70,10 @@ int main (int argc, char** argv) {
 	/* Attach the socket to the filter program */
 	bcc_attach (sockfd, module, "filter");
 
-	/* Start listening on the socket */
-	socket_listen (sockfd);
+	/* If possible, start listening on the socket */
+	if (type == SOCK_STREAM) {
+		socket_listen (sockfd);
+	}
 
 	/* Pass the socket to the main program */
 	socket_pass (sockfd, &argv[2]);

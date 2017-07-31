@@ -1,5 +1,6 @@
 #pragma once
 
+#include <alfwrapper/socket.h>       // for socktype
 #include <stdint.h>                  // for uint32_t
 #include "../../ebpf/common-data.h"  // for address4, address6, interface
 

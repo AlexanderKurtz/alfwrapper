@@ -8,13 +8,13 @@
 #include <sys/socket.h>      // for bind, connect, listen, setsockopt, socket
 
 /* getaddrinfo() with error checking. */
-struct addrinfo* socket_lookup (const char* addr, const char* port) {
+struct addrinfo* socket_lookup (const char* addr, const char* port, socktype type) {
 	struct addrinfo* result = NULL;
 
 	struct addrinfo hints = {
 		.ai_flags     = 0,
 		.ai_family    = 0,
-		.ai_socktype  = 0,
+		.ai_socktype  = type,
 		.ai_protocol  = 0,
 		.ai_addrlen   = 0,
 		.ai_addr      = NULL,
@@ -58,26 +58,26 @@ void socket_connect (int sockfd, struct addrinfo* addr) {
 	}
 }
 
-int socket_create (struct addrinfo* addrinfo, int socktype) {
-	int sockfd = socket (addrinfo->ai_family, socktype, addrinfo->ai_protocol);
+int socket_create (struct addrinfo* addrinfo) {
+	int sockfd = socket (addrinfo->ai_family, addrinfo->ai_socktype, addrinfo->ai_protocol);
 
 	if (sockfd < 0) {
-		die ("socket (%d, %d, %d) failed", addrinfo->ai_family, socktype, addrinfo->ai_protocol);
+		die ("socket (%d, %d, %d) failed", addrinfo->ai_family, addrinfo->ai_socktype, addrinfo->ai_protocol);
 	}
 
 	return sockfd;
 }
 
-int socket_client (const char* addr, const char* port, int socktype) {
-	struct addrinfo* addrinfo = socket_lookup (addr, port);
-	int sockfd = socket_create (addrinfo, socktype);
+int socket_client (const char* addr, const char* port, socktype type) {
+	struct addrinfo* addrinfo = socket_lookup (addr, port, type);
+	int sockfd = socket_create (addrinfo);
 	socket_connect (sockfd, addrinfo);
 	return sockfd;
 }
 
-int socket_server (const char* addr, const char* port, int socktype) {
-	struct addrinfo* addrinfo = socket_lookup (addr, port);
-	int sockfd = socket_create (addrinfo, socktype);
+int socket_server (const char* addr, const char* port, socktype type) {
+	struct addrinfo* addrinfo = socket_lookup (addr, port, type);
+	int sockfd = socket_create (addrinfo);
 	socket_bind (sockfd, addrinfo);
 	return sockfd;
 }

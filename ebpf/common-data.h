@@ -20,5 +20,3 @@ typedef struct __attribute__((packed)) {
 typedef uint32_t interface;
 
 typedef uint16_t portnumber;
-
-typedef int socktype;
