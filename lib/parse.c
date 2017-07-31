@@ -1,15 +1,16 @@
-#include <alfwrapper/cleanup.h>  // for _cleanup_free_
-#include <alfwrapper/die.h>      // for die
-#include <alfwrapper/parse.h>    // for key_value_type, address6, mapspec
-#include <alfwrapper/string.h>   // for string_equal, string_duplicate
-#include <arpa/inet.h>           // for inet_pton
-#include <endian.h>              // for __x, be64toh, be32toh
-#include <net/if.h>              // for if_nametoindex
-#include <stdbool.h>             // for false
-#include <stdint.h>              // for uint32_t
-#include <stdlib.h>              // for atoi
-#include <string.h>              // for strsep
-#include <sys/socket.h>          // for AF_INET, AF_INET6
+#include <alfwrapper/cleanup.h>                 // for _cleanup_free_
+#include <alfwrapper/die.h>                     // for die
+#include <alfwrapper/parse.h>                   // for key_value_type, mapspec
+#include <alfwrapper/string.h>                  // for string_equal, string_...
+#include <arpa/inet.h>                          // for inet_pton
+#include <endian.h>                             // for __x, be64toh, be32toh
+#include <net/if.h>                             // for if_nametoindex
+#include <stdbool.h>                            // for false
+#include <stdint.h>                             // for uint32_t
+#include <stdlib.h>                             // for atoi
+#include <string.h>                             // for strsep
+#include <sys/socket.h>                         // for AF_INET, AF_INET6
+#include "alfwrapper/../../ebpf/common-data.h"  // for address6, subnet4
 
 static void parse_address4 (const char* input, address4* output) {
 	int r = inet_pton (AF_INET, input, output);
@@ -104,4 +105,14 @@ void parse_mapspec (const char* input, mapspec* output) {
 	output->map = string_duplicate (map);
 	parse_typed (key, &output->key);
 	parse_typed (val, &output->val);
+}
+
+void parse_socktype (const char* input, socktype* output) {
+	if (string_equal (input, "SOCK_DGRAM")) {
+		*output = SOCK_DGRAM;
+	} else if (string_equal (input, "SOCK_STREAM")) {
+		*output = SOCK_STREAM;
+	} else {
+		die ("parse_socktype (%s, %p): Unknown socket type", input, output);
+	}
 }
