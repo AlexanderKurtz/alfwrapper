@@ -8,7 +8,7 @@
 #include <sys/socket.h>      // for bind, connect, listen, setsockopt, socket
 
 /* getaddrinfo() with error checking. */
-static struct addrinfo* lookup (const char* addr, const char* port){
+struct addrinfo* socket_lookup (const char* addr, const char* port) {
 	struct addrinfo* result = NULL;
 
 	struct addrinfo hints = {
@@ -36,7 +36,7 @@ static struct addrinfo* lookup (const char* addr, const char* port){
 }
 
 /* bind() with error checking. */
-static void socket_bind (int sockfd, struct addrinfo* addr) {
+void socket_bind (int sockfd, struct addrinfo* addr) {
 	int one = 1;
 
 	/* Enable reuse of recently freed ports */
@@ -50,7 +50,7 @@ static void socket_bind (int sockfd, struct addrinfo* addr) {
 }
 
 /* connect() with error checking */
-static void socket_connect (int sockfd, struct addrinfo* addr) {
+void socket_connect (int sockfd, struct addrinfo* addr) {
 	int r = connect (sockfd, addr->ai_addr, addr->ai_addrlen);
 
 	if (r != 0) {
@@ -58,7 +58,7 @@ static void socket_connect (int sockfd, struct addrinfo* addr) {
 	}
 }
 
-static int socket_create (struct addrinfo* addrinfo, int socktype) {
+int socket_create (struct addrinfo* addrinfo, int socktype) {
 	int sockfd = socket (addrinfo->ai_family, socktype, addrinfo->ai_protocol);
 
 	if (sockfd < 0) {
@@ -69,14 +69,14 @@ static int socket_create (struct addrinfo* addrinfo, int socktype) {
 }
 
 int socket_client (const char* addr, const char* port, int socktype) {
-	struct addrinfo* addrinfo = lookup (addr, port);
+	struct addrinfo* addrinfo = socket_lookup (addr, port);
 	int sockfd = socket_create (addrinfo, socktype);
 	socket_connect (sockfd, addrinfo);
 	return sockfd;
 }
 
 int socket_server (const char* addr, const char* port, int socktype) {
-	struct addrinfo* addrinfo = lookup (addr, port);
+	struct addrinfo* addrinfo = socket_lookup (addr, port);
 	int sockfd = socket_create (addrinfo, socktype);
 	socket_bind (sockfd, addrinfo);
 	return sockfd;
