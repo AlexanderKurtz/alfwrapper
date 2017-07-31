@@ -7,10 +7,11 @@
 #include <stdlib.h>             // for realloc
 #include <sys/socket.h>         // for SOCK_STREAM
 
-static const char* address   = "::";
-static const char* port      = "4242";
-static mapspec*    set       = NULL;
-static int         set_count = 0;
+static const char*    address   = "::";
+static const char*    port      = "4242";
+static socktype       type      = SOCK_STREAM;
+static int            set_count = 0;
+static mapspec*       set       = NULL;
 
 static void handle_address (const char* input) {
 	address = input;
@@ -18,6 +19,10 @@ static void handle_address (const char* input) {
 
 static void handle_port (const char* input) {
 	port = input;
+}
+
+static void handle_type (const char* input) {
+	parse_socktype (input, &type);
 }
 
 static void handle_set (const char* input) {
@@ -37,15 +42,22 @@ int main (int argc, char** argv) {
 	argv_option (argv, "--address",  handle_address);
 	argv_option (argv, "--port",     handle_port);
 	argv_option (argv, "--set",      handle_set);
+	argv_option (argv, "--type",     handle_type);
 	argv_finish (argv,               handle_unknown);
 
 	/* Make sure we received a filter path and main program */
 	if (argv[1] == NULL || argv[2] == NULL) {
-		die ("Usage: %s [--address ADDRESS] [--port PORT] [--set MAPNAME,KEY_TYPE:KEY_STRING,VALUE_TYPE:VALUE_STRING] <filter> <program> [<argument>] [...]", argv[0]);
+		die ("Usage: %s [--address ADDRESS] [--port PORT] [--type TYPE] [--set MAPNAME,KEY_TYPE:KEY_STRING,VALUE_TYPE:VALUE_STRING] <filter> <program> [<argument>] [...]", argv[0]);
 	}
 
-	/* Set up the server socket */
-	int sockfd = socket_server (address, port, SOCK_STREAM);
+	/* Look up the address and port */
+	struct addrinfo* addrinfo = socket_lookup (address, port);
+
+	/* Create the server socket */
+	int sockfd = socket_create (addrinfo, type);
+
+	/* Bind the socket to the specified address */
+	socket_bind (sockfd, addrinfo);
 
 	/* Load the filter program */
 	void* module = bcc_load (argv[1]);
