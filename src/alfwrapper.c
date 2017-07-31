@@ -7,11 +7,11 @@
 #include <stdlib.h>                             // for realloc
 #include <sys/socket.h>                         // for SOCK_STREAM
 
-static const char*    address   = "::";
-static const char*    port      = "4242";
-static socktype       type      = SOCK_STREAM;
-static int            set_count = 0;
-static mapspec*       set       = NULL;
+static const char* address   = "::";
+static const char* port      = "4242";
+static mapspec*    set       = NULL;
+static int         set_count = 0;
+static socktype    type      = SOCK_STREAM;
 
 static void handle_address (const char* input) {
 	address = input;
@@ -21,13 +21,13 @@ static void handle_port (const char* input) {
 	port = input;
 }
 
-static void handle_type (const char* input) {
-	parse_socktype (input, &type);
-}
-
 static void handle_set (const char* input) {
 	set = realloc (set, sizeof (*set) * ++set_count);
 	parse_mapspec (input, set + set_count - 1);
+}
+
+static void handle_type (const char* input) {
+	parse_socktype (input, &type);
 }
 
 static void handle_unknown (const char* input) {
