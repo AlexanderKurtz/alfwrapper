@@ -56,9 +56,6 @@ int main (int argc, char** argv) {
 	/* Create the server socket */
 	int sockfd = socket_create (addrinfo);
 
-	/* Bind the socket to the specified address */
-	socket_bind (sockfd, addrinfo);
-
 	/* Load the filter program */
 	void* module = bcc_load (argv[1]);
 
@@ -69,6 +66,9 @@ int main (int argc, char** argv) {
 
 	/* Attach the socket to the filter program */
 	bcc_attach (sockfd, module, "filter");
+
+	/* Bind the socket to the specified address */
+	socket_bind (sockfd, addrinfo);
 
 	/* If possible, start listening on the socket */
 	if (type == SOCK_STREAM) {
