@@ -1,8 +1,8 @@
 #!/bin/sh -eu
 
 ./alfwrapper \
-	--set ports,index:0,portnumber:1234 \
-	--set ports,index:1,portnumber:1235 \
-	--set ports,index:2,portnumber:1236 \
+	--set ports,0,1234 \
+	--set ports,1,1235 \
+	--set ports,2,1236 \
 	ebpf/knocking.c \
 	true

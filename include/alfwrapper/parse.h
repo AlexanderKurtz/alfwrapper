@@ -13,11 +13,12 @@ union key_value_type {
 	struct subnet6    subnet6_member;
 };
 
-typedef struct {
-	const char*          map;
-	union key_value_type key;
-	union key_value_type val;
-} mapspec;
+struct parameter {
+	const char* table;
+	const char* key;
+	const char* value;
+};
 
-void parse_mapspec (const char* input, mapspec* output);
+void parse_typed (const char* type, const char* data, union key_value_type* output);
 void parse_socktype (const char* input, socktype* output);
+void parse_parameter (const char* input, struct parameter* output);

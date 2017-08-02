@@ -1,14 +1,14 @@
 #include <alfwrapper/cleanup.h>  // for _cleanup_free_
 #include <alfwrapper/data.h>     // for address6, address4, interface, subnet4
 #include <alfwrapper/die.h>      // for die
-#include <alfwrapper/parse.h>    // for key_value_type, mapspec
+#include <alfwrapper/parse.h>    // for key_value_type, parameter
 #include <alfwrapper/socket.h>   // for socktype
-#include <alfwrapper/string.h>   // for string_equal, string_duplicate
+#include <alfwrapper/string.h>   // for string_is_prefix, string_duplicate
 #include <arpa/inet.h>           // for inet_pton
 #include <endian.h>              // for be64toh, be32toh
 #include <net/if.h>              // for if_nametoindex
 #include <stdbool.h>             // for false
-#include <stdlib.h>              // for atoi
+#include <stdlib.h>              // for atoi, NULL
 #include <string.h>              // for strsep
 #include <sys/socket.h>          // for AF_INET, AF_INET6, SOCK_DGRAM, SOCK_...
 
@@ -69,42 +69,36 @@ static void parse_index (const char* input, struct index* output) {
 	output->raw = atoi (input);
 }
 
-static void parse_typed (const char* input, union key_value_type* output) {
-	char* copy _cleanup_free_ = string_duplicate (input);
-	char* data = copy;
-
-	char* type  = strsep (&data, ":");
-
-	if (!type || !data) {
-		die ("Invalid typed data: %s", input);
+void parse_typed (const char* type, const char* data, union key_value_type* output) {
+	if (!string_is_suffix ("\"struct\"]", type)) {
+		die ("parsed_typed (%s, %s, %p): Type is not a struct", type, data, output);
 	}
 
 	if (false) {}
-	else if (string_equal (type, "address4"))   { parse_address4   (data, &output->address4_member);   }
-	else if (string_equal (type, "address6"))   { parse_address6   (data, &output->address6_member);   }
-	else if (string_equal (type, "index"))      { parse_index      (data, &output->index_member);      }
-	else if (string_equal (type, "interface"))  { parse_interface  (data, &output->interface_member);  }
-	else if (string_equal (type, "portnumber")) { parse_portnumber (data, &output->portnumber_member); }
-	else if (string_equal (type, "subnet4"))    { parse_subnet4    (data, &output->subnet4_member);    }
-	else if (string_equal (type, "subnet6"))    { parse_subnet6    (data, &output->subnet6_member);    }
-	else { die ("parse_typed (%s, %p): Unrecognized type '%s'", input, output, type); }
+	else if (string_is_prefix ("[\"address4\"",   type)) { parse_address4   (data, &output->address4_member);   }
+	else if (string_is_prefix ("[\"address6\"",   type)) { parse_address6   (data, &output->address6_member);   }
+	else if (string_is_prefix ("[\"interface\"",  type)) { parse_interface  (data, &output->interface_member);  }
+	else if (string_is_prefix ("[\"portnumber\"", type)) { parse_portnumber (data, &output->portnumber_member); }
+	else if (string_is_prefix ("[\"subnet4\"",    type)) { parse_subnet4    (data, &output->subnet4_member);    }
+	else if (string_is_prefix ("[\"subnet6\"",    type)) { parse_subnet6    (data, &output->subnet6_member);    }
+	else if (string_is_prefix ("[\"index\"",      type)) { parse_index      (data, &output->index_member);      }
+	else { die ("parse_typed (%s, %s, %p): Unrecognized type", type, data, output); }
 }
 
-void parse_mapspec (const char* input, mapspec* output) {
-	char* copy _cleanup_free_ = string_duplicate (input);
-	char* data = copy;
+void parse_parameter (const char* input, struct parameter* output) {
+	char* data = string_duplicate (input);
 
-	char* map = strsep (&data, ",");
-	char* key = strsep (&data, ",");
-	char* val = strsep (&data, ",");
+	const char* table = strsep (&data, ",");
+	const char* key   = strsep (&data, ",");
+	const char* value = strsep (&data, ",");
 
-	if (!map || !key || !val) {
-		die ("Invalid map specification: %s", input);
+	if (table == NULL || key == NULL || value == NULL) {
+		die ("Invalid parameter specification: %s", input);
 	}
 
-	output->map = string_duplicate (map);
-	parse_typed (key, &output->key);
-	parse_typed (val, &output->val);
+	output->table = table;
+	output->key   = key;
+	output->value = value;
 }
 
 void parse_socktype (const char* input, socktype* output) {

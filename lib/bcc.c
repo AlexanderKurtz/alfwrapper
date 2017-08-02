@@ -1,5 +1,6 @@
 #include <alfwrapper/die.h>        // for die
 #include <alfwrapper/fd.h>         // for fd_close
+#include <alfwrapper/parse.h>      // for parse_typed, key_value_type
 #include <alfwrapper/path.h>       // for path_change, path_basename, path_d...
 #include <alfwrapper/socket.h>     // for socket_option
 #include <bcc/bpf_common.h>        // for bpf_table_fd, bpf_function_size
@@ -38,17 +39,35 @@ void bcc_get (void* module, const char* name, void* key, void* value) {
 }
 
 /* bpf_table_fd() and bpf_update_elem() with error checking */
-void bcc_set (void* module, const char* name, void* key, void* value){
-	int table_fd = bpf_table_fd (module, name);
+void bcc_set (void* module, const char* table, const char* key, const char* value){
+	int table_fd = bpf_table_fd (module, table);
 
 	if (table_fd < 0) {
-		die ("bpf_table_fd(%p, %s) failed", module, name);
+		die ("bpf_table_fd(%p, %s) failed", module, table);
 	}
 
-	int r = bpf_update_elem (table_fd, key, value, 0);
+	const char* key_type = bpf_table_key_desc (module, table);
+
+	if (key_type == NULL) {
+		die ("bpf_table_key_desc (%p, %s) failed", module, table);
+	}
+
+	const char* value_type = bpf_table_leaf_desc (module, table);
+
+	if (value_type == NULL) {
+		die ("bpf_table_leaf_desc (%p, %s) failed", module, table);
+	}
+
+	union key_value_type key_buffer;
+	union key_value_type value_buffer;
+
+	parse_typed (key_type,   key,   &key_buffer);
+	parse_typed (value_type, value, &value_buffer);
+
+	int r = bpf_update_elem (table_fd, &key_buffer, &value_buffer, 0);
 
 	if (r != 0) {
-		die ("bpf_update_elem(%d, %p, %p, %d) failed", table_fd, key, value, 0);
+		die ("bpf_update_elem(%d, %p, %p, %d) failed", table_fd, &key_buffer, &value_buffer, 0);
 	}
 }
 

@@ -1,16 +1,17 @@
-#include <alfwrapper/argv.h>                    // for argv_option, argv_finish
-#include <alfwrapper/bcc.h>                     // for bcc_attach, bcc_load
-#include <alfwrapper/die.h>                     // for die
-#include <alfwrapper/parse.h>                   // for mapspec, parse_mapspec
-#include <alfwrapper/socket.h>                  // for socket_bind, socket_c...
-#include <stddef.h>                             // for NULL
-#include <stdlib.h>                             // for realloc
-#include <sys/socket.h>                         // for SOCK_STREAM
+#include <alfwrapper/argv.h>    // for argv_option, argv_finish
+#include <alfwrapper/bcc.h>     // for bcc_attach, bcc_load, bcc_set
+#include <alfwrapper/die.h>     // for die
+#include <alfwrapper/parse.h>   // for parameter, parse_parameter, parse_soc...
+#include <alfwrapper/socket.h>  // for socket_bind, socket_create, socket_li...
+#include <stddef.h>             // for NULL, size_t
+#include <stdlib.h>             // for realloc
+#include <sys/socket.h>         // for SOCK_STREAM
+
+static struct parameter* parameters = NULL;
+static size_t parameter_count = 0;
 
 static const char* address   = "::";
 static const char* port      = "4242";
-static mapspec*    set       = NULL;
-static int         set_count = 0;
 static socktype    type      = SOCK_STREAM;
 
 static void handle_address (const char* input) {
@@ -22,8 +23,8 @@ static void handle_port (const char* input) {
 }
 
 static void handle_set (const char* input) {
-	set = realloc (set, sizeof (*set) * ++set_count);
-	parse_mapspec (input, set + set_count - 1);
+	parameters = realloc (parameters, sizeof (*parameters) * ++parameter_count);
+	parse_parameter (input, parameters + parameter_count - 1);
 }
 
 static void handle_type (const char* input) {
@@ -60,8 +61,8 @@ int main (int argc, char** argv) {
 	void* module = bcc_load (argv[1]);
 
 	/* Set up the maps in the filter program */
-	for (int i = 0; i < set_count; i++) {
-		bcc_set (module, set[i].map, &set[i].key, &set[i].val);
+	for (size_t i = 0; i < parameter_count; i++) {
+		bcc_set (module, parameters[i].table, parameters[i].key, parameters[i].value);
 	}
 
 	/* Attach the socket to the filter program */
