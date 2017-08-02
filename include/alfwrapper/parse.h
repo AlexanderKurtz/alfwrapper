@@ -12,6 +12,8 @@ typedef union __attribute__((packed)) {
 	socktype   socktype_member;
 	subnet4    subnet4_member;
 	subnet6    subnet6_member;
+	uint8_t    uint8_t_member;
+	uint16_t   uint16_t_member;
 	uint32_t   uint32_t_member;
 } key_value_type;
 
