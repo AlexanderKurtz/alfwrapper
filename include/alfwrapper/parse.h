@@ -3,7 +3,7 @@
 #include <alfwrapper/data.h>    // for address4, address6, index, interface
 #include <alfwrapper/socket.h>  // for socktype
 
-typedef union __attribute__((packed)) {
+union key_value_type {
 	struct address4   address4_member;
 	struct address6   address6_member;
 	struct index      index_member;
@@ -11,12 +11,12 @@ typedef union __attribute__((packed)) {
 	struct portnumber portnumber_member;
 	struct subnet4    subnet4_member;
 	struct subnet6    subnet6_member;
-} key_value_type;
+};
 
 typedef struct {
-	const char*    map;
-	key_value_type key;
-	key_value_type val;
+	const char*          map;
+	union key_value_type key;
+	union key_value_type val;
 } mapspec;
 
 void parse_mapspec (const char* input, mapspec* output);

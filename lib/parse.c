@@ -69,7 +69,7 @@ static void parse_index (const char* input, struct index* output) {
 	output->raw = atoi (input);
 }
 
-static void parse_typed (const char* input, key_value_type* output) {
+static void parse_typed (const char* input, union key_value_type* output) {
 	char* copy _cleanup_free_ = string_duplicate (input);
 	char* data = copy;
 
