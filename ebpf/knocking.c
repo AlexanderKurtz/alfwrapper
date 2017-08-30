@@ -1,8 +1,8 @@
 #include "common.h"
 
-BPF_TABLE ("hash", uint8_t,  portnumber, ports,     256)
-BPF_TABLE ("hash", address4, uint8_t,    database4, 256)
-BPF_TABLE ("hash", address6, uint8_t,    database6, 256)
+BPF_TABLE ("hash", uint8_t,  portnumber, ports,     64)
+BPF_TABLE ("hash", address4, uint8_t,    database4, 64)
+BPF_TABLE ("hash", address6, uint8_t,    database6, 64)
 
 uint32_t filter (struct __sk_buff *skb) {
 	uint32_t length    = skb->len;
