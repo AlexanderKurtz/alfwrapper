@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-exec sudo ./alfwrapper \
+./alfwrapper \
 	--address "${1-::}" \
 	--port "${2-4242}" \
 	--set 'ports,uint8_t:0,portnumber:15000' \
