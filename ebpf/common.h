@@ -9,7 +9,6 @@
 
 #define DROP() { return 0; };
 #define KEEP() { return skb->len; };
-#define NUM(x) (sizeof (x) / sizeof (*x))
 
 /* From /usr/include/linux/if_ether.h */
 const uint16_t protocol_ip6 = 0x86DD;
