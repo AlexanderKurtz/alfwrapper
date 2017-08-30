@@ -8,7 +8,6 @@
 #include <endian.h>              // for be64toh, be32toh
 #include <net/if.h>              // for if_nametoindex
 #include <stdbool.h>             // for false
-#include <stdint.h>              // for uint16_t, uint32_t, uint8_t
 #include <stdlib.h>              // for atoi
 #include <string.h>              // for strsep
 #include <sys/socket.h>          // for AF_INET, AF_INET6, SOCK_DGRAM, SOCK_...
@@ -66,16 +65,8 @@ static void parse_portnumber (const char* input, struct portnumber* output) {
 	output->raw = atoi (input);
 }
 
-static void parse_uint8_t (const char* input, uint8_t* output) {
-	*output = atoi (input);
-}
-
-static void parse_uint16_t (const char* input, uint16_t* output) {
-	*output = atoi (input);
-}
-
-static void parse_uint32_t (const char* input, uint32_t* output) {
-	*output = atoi (input);
+static void parse_index (const char* input, struct index* output) {
+	output->raw = atoi (input);
 }
 
 static void parse_typed (const char* input, key_value_type* output) {
@@ -91,13 +82,11 @@ static void parse_typed (const char* input, key_value_type* output) {
 	if (false) {}
 	else if (string_equal (type, "address4"))   { parse_address4   (data, &output->address4_member);   }
 	else if (string_equal (type, "address6"))   { parse_address6   (data, &output->address6_member);   }
+	else if (string_equal (type, "index"))      { parse_index      (data, &output->index_member);      }
 	else if (string_equal (type, "interface"))  { parse_interface  (data, &output->interface_member);  }
 	else if (string_equal (type, "portnumber")) { parse_portnumber (data, &output->portnumber_member); }
 	else if (string_equal (type, "subnet4"))    { parse_subnet4    (data, &output->subnet4_member);    }
 	else if (string_equal (type, "subnet6"))    { parse_subnet6    (data, &output->subnet6_member);    }
-	else if (string_equal (type, "uint8_t"))    { parse_uint8_t    (data, &output->uint8_t_member);    }
-	else if (string_equal (type, "uint16_t"))   { parse_uint16_t   (data, &output->uint16_t_member);   }
-	else if (string_equal (type, "uint32_t"))   { parse_uint32_t   (data, &output->uint32_t_member);   }
 	else { die ("parse_typed (%s, %p): Unrecognized type '%s'", input, output, type); }
 }
 
