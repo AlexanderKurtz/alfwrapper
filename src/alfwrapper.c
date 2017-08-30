@@ -48,7 +48,7 @@ int main (int argc, char** argv) {
 
 	/* Make sure we received a filter path and main program */
 	if (argv[1] == NULL || argv[2] == NULL) {
-		die ("Usage: %s [--address ADDRESS] [--port PORT] [--type TYPE] [--set MAPNAME,KEY_TYPE:KEY_STRING,VALUE_TYPE:VALUE_STRING] <filter> <program> [<argument>] [...]", argv[0]);
+		die ("Usage: %s [--address ADDRESS] [--port PORT] [--type TYPE] [--set MAP,KEY,VALUE] <filter> <program> [<argument>] [...]", argv[0]);
 	}
 
 	/* Look up the address and port */
