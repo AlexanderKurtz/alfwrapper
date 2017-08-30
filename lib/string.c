@@ -10,6 +10,14 @@ bool string_equal_prefix (const char* a, const char* b, size_t n) {
 	return strncmp (a, b, n) == 0;
 }
 
+bool string_is_prefix (const char* a, const char* b) {
+	return string_equal_prefix (a, b, strlen (a));
+}
+
+bool string_is_suffix (const char* a, const char* b) {
+	return string_equal (a, b + strlen (b) - strlen (a));
+}
+
 char* string_duplicate (const char *s) {
 	char* r = strdup (s);
 
