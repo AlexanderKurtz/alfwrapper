@@ -4,18 +4,9 @@
 #include <stdint.h>
 #endif
 
-struct address4 {
-	uint32_t raw;
-} __attribute__((packed));
-
 struct address6 {
 	uint64_t high;
 	uint64_t low;
-} __attribute__((packed));
-
-struct subnet4 {
-	struct address4 address;
-	uint8_t prefix;
 } __attribute__((packed));
 
 struct subnet6 {

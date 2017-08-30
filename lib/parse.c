@@ -12,17 +12,6 @@
 #include <string.h>              // for strsep
 #include <sys/socket.h>          // for AF_INET, AF_INET6, SOCK_DGRAM, SOCK_...
 
-static void parse_address4 (const char* input, struct address4* output) {
-	int r = inet_pton (AF_INET, input, output);
-
-	if (r != 1) {
-		die ("inet_pton (AF_INET, %s, %p) failed", input, output);
-	}
-
-	/* Yes, we want it that way */
-	output->raw = be32toh (output->raw);
-}
-
 static void parse_address6 (const char* input, struct address6* output) {
 	int r = inet_pton (AF_INET6, input, output);
 
@@ -33,15 +22,6 @@ static void parse_address6 (const char* input, struct address6* output) {
 	/* Yes, we want it that way */
 	output->high = be64toh (output->high);
 	output->low  = be64toh (output->low);
-}
-
-static void parse_subnet4 (const char* input, struct subnet4* output) {
-	char* copy _cleanup_free_ = string_duplicate (input);
-	char* data = copy;
-
-	char* prefix = strsep (&data, "/");
-	parse_address4 (prefix, &output->address);
-	output->prefix = atoi (data);
 }
 
 static void parse_subnet6 (const char* input, struct subnet6* output) {
@@ -75,11 +55,9 @@ void parse_typed (const char* type, const char* data, union key_value_type* outp
 	}
 
 	if (false) {}
-	else if (string_is_prefix ("[\"address4\"",   type)) { parse_address4   (data, &output->address4_member);   }
 	else if (string_is_prefix ("[\"address6\"",   type)) { parse_address6   (data, &output->address6_member);   }
 	else if (string_is_prefix ("[\"interface\"",  type)) { parse_interface  (data, &output->interface_member);  }
 	else if (string_is_prefix ("[\"portnumber\"", type)) { parse_portnumber (data, &output->portnumber_member); }
-	else if (string_is_prefix ("[\"subnet4\"",    type)) { parse_subnet4    (data, &output->subnet4_member);    }
 	else if (string_is_prefix ("[\"subnet6\"",    type)) { parse_subnet6    (data, &output->subnet6_member);    }
 	else if (string_is_prefix ("[\"index\"",      type)) { parse_index      (data, &output->index_member);      }
 	else { die ("parse_typed (%s, %s, %p): Unrecognized type", type, data, output); }

@@ -12,17 +12,11 @@
 #define NUM(x) (sizeof (x) / sizeof (*x))
 
 /* From /usr/include/linux/if_ether.h */
-const uint16_t protocol_ip4 = 0x0800;
 const uint16_t protocol_ip6 = 0x86DD;
 
 /* From /usr/include/linux/filter.h */
 const size_t bpf_net_off = -0x100000;
 const size_t bpf_ll_off  = -0x200000;
-
-FUNC bool match_subnet4 (const struct subnet4* subnet, uint32_t address) {
-	int drop = 32 - subnet->prefix;
-	return (address >> drop) == (subnet->address.raw >> drop);
-}
 
 FUNC bool match_subnet6 (const struct subnet6* subnet, uint64_t high, uint64_t low) {
 	if (subnet->prefix <= 64) {
