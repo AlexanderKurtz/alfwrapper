@@ -44,7 +44,12 @@ echo "Spawning a simple echo daemon on [::1]:4242 *with* aflwrapper with lots of
 	--set 'allow6,11,1::11/72' \
 	--set 'allow6,12,1::12/72' \
 	--set 'allow6,13,1::13/72' \
-	--set 'allow6,14,::1/128' \
+	--set 'allow6,14,1::14/72' \
+	--set 'allow6,15,1::15/72' \
+	--set 'allow6,16,1::16/72' \
+	--set 'allow6,17,1::17/72' \
+	--set 'allow6,18,1::18/72' \
+	--set 'allow6,19,::1/128' \
 	\
 	ebpf/whitelist.c \
 	systemd-socket-activate --accept --inetd cat 1>/dev/null 2>/dev/null & daemon="${!}"
