@@ -3,7 +3,7 @@ CFLAGS = -std=gnu11 -Iinclude -O2 -Wall -Wextra -Werror
 BINS = $(patsubst src/%.c,%,$(wildcard src/*.c))
 LIBS = $(wildcard lib/*.c)
 
-all: $(BINS)
+all: $(BINS) tests
 
 alfwrapper: src/alfwrapper.c $(LIBS)
 	$(CC) $(CFLAGS) --output='$@' $+ -lbcc
@@ -11,4 +11,7 @@ alfwrapper: src/alfwrapper.c $(LIBS)
 clean:
 	rm --force --recursive --verbose -- $(BINS)
 
-.PHONY: all clean
+tests: alfwrapper
+	run-parts --regex '.*' --verbose 'tests'
+
+.PHONY: all clean tests
