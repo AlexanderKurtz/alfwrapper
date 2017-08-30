@@ -1,8 +1,8 @@
 #pragma once
 
-#include <alfwrapper/socket.h>       // for socktype
-#include <stdint.h>                  // for uint32_t
-#include "../../ebpf/common-data.h"  // for address4, address6, interface
+#include <alfwrapper/data.h>    // for address4, address6, interface, portnu...
+#include <alfwrapper/socket.h>  // for socktype
+#include <stdint.h>             // for uint16_t, uint32_t, uint8_t
 
 typedef union __attribute__((packed)) {
 	socktype          socktype_member;

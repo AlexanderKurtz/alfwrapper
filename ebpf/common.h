@@ -3,7 +3,7 @@
 #include <bcc/helpers.h>
 #include <bcc/proto.h>
 
-#include "common-data.h"
+#include "data.h"
 
 #define FUNC static inline __attribute__((always_inline))
 

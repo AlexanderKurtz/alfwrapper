@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef _ALFWRAPPER_NEED_STDINT_H_
+#include <stdint.h>
+#endif
+
 struct address4 {
 	uint32_t raw;
 } __attribute__((packed));

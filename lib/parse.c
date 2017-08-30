@@ -1,16 +1,17 @@
-#include <alfwrapper/cleanup.h>                 // for _cleanup_free_
-#include <alfwrapper/die.h>                     // for die
-#include <alfwrapper/parse.h>                   // for key_value_type, mapspec
-#include <alfwrapper/string.h>                  // for string_equal, string_...
-#include <arpa/inet.h>                          // for inet_pton
-#include <endian.h>                             // for __x, be64toh, be32toh
-#include <net/if.h>                             // for if_nametoindex
-#include <stdbool.h>                            // for false
-#include <stdint.h>                             // for uint32_t
-#include <stdlib.h>                             // for atoi
-#include <string.h>                             // for strsep
-#include <sys/socket.h>                         // for AF_INET, AF_INET6
-#include "alfwrapper/../../ebpf/common-data.h"  // for address6, subnet4
+#include <alfwrapper/cleanup.h>  // for _cleanup_free_
+#include <alfwrapper/data.h>     // for address6, address4, interface, subnet4
+#include <alfwrapper/die.h>      // for die
+#include <alfwrapper/parse.h>    // for key_value_type, mapspec
+#include <alfwrapper/socket.h>   // for socktype
+#include <alfwrapper/string.h>   // for string_equal, string_duplicate
+#include <arpa/inet.h>           // for inet_pton
+#include <endian.h>              // for be64toh, be32toh
+#include <net/if.h>              // for if_nametoindex
+#include <stdbool.h>             // for false
+#include <stdint.h>              // for uint16_t, uint32_t, uint8_t
+#include <stdlib.h>              // for atoi
+#include <string.h>              // for strsep
+#include <sys/socket.h>          // for AF_INET, AF_INET6, SOCK_DGRAM, SOCK_...
 
 static void parse_address4 (const char* input, struct address4* output) {
 	int r = inet_pton (AF_INET, input, output);
