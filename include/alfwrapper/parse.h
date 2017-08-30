@@ -5,16 +5,16 @@
 #include "../../ebpf/common-data.h"  // for address4, address6, interface
 
 typedef union __attribute__((packed)) {
-	address4   address4_member;
-	address6   address6_member;
-	interface  interface_member;
-	portnumber portnumber_member;
-	socktype   socktype_member;
-	subnet4    subnet4_member;
-	subnet6    subnet6_member;
-	uint8_t    uint8_t_member;
-	uint16_t   uint16_t_member;
-	uint32_t   uint32_t_member;
+	socktype          socktype_member;
+	struct address4   address4_member;
+	struct address6   address6_member;
+	struct interface  interface_member;
+	struct portnumber portnumber_member;
+	struct subnet4    subnet4_member;
+	struct subnet6    subnet6_member;
+	uint16_t          uint16_t_member;
+	uint32_t          uint32_t_member;
+	uint8_t           uint8_t_member;
 } key_value_type;
 
 typedef struct {

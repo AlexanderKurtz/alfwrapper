@@ -1,13 +1,13 @@
 #include "common.h"
 
-static const subnet4 allow4[] =
+static const struct subnet4 allow4[] =
 	{ { 0x0a000000,  8 }
 	, { 0x7f000000, 24 }
 	, { 0xac0a0000, 12 }
 	, { 0xc0a80000, 16 }
 	};
 
-static const subnet6 allow6[] =
+static const struct subnet6 allow6[] =
 	{ { 0x00000000, 0x00000001, 128 }
 	, { 0xfd000000, 0x00000000,   8 }
 	};

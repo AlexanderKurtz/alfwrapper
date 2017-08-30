@@ -1,22 +1,33 @@
 #pragma once
 
-typedef uint32_t address4;
+struct address4 {
+	uint32_t raw;
+} __attribute__((packed));
 
-typedef struct __attribute__((packed)) {
+struct address6 {
 	uint64_t high;
 	uint64_t low;
-} address6;
+} __attribute__((packed));
 
-typedef struct __attribute__((packed)) {
-	address4 address;
+struct subnet4 {
+	struct address4 address;
 	uint8_t prefix;
-} subnet4;
+} __attribute__((packed));
 
-typedef struct __attribute__((packed)) {
-	address6 address;
+struct subnet6 {
+	struct address6 address;
 	uint8_t prefix;
-} subnet6;
+} __attribute__((packed));
 
-typedef uint32_t interface;
+struct interface {
+	uint32_t raw;
+} __attribute__((packed));
 
-typedef uint16_t portnumber;
+struct portnumber {
+	uint16_t raw;
+} __attribute__((packed));
+
+/* Index for BPF_MAP_TYPE_ARRAY, must be exactly four bytes, see bpf(2) */
+struct index {
+	uint32_t raw;
+} __attribute__((packed));

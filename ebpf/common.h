@@ -19,12 +19,12 @@ const uint16_t protocol_ip6 = 0x86DD;
 const size_t bpf_net_off = -0x100000;
 const size_t bpf_ll_off  = -0x200000;
 
-FUNC bool match_subnet4 (const subnet4* subnet, uint32_t address) {
+FUNC bool match_subnet4 (const struct subnet4* subnet, uint32_t address) {
 	int drop = 32 - subnet->prefix;
-	return (address >> drop) == (subnet->address >> drop);
+	return (address >> drop) == (subnet->address.raw >> drop);
 }
 
-FUNC bool match_subnet6 (const subnet6* subnet, uint64_t high, uint64_t low) {
+FUNC bool match_subnet6 (const struct subnet6* subnet, uint64_t high, uint64_t low) {
 	if (subnet->prefix <= 64) {
 		int drop = 64 - subnet->prefix;
 		return (high >> drop) == (subnet->address.high >> drop);

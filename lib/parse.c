@@ -12,7 +12,7 @@
 #include <sys/socket.h>                         // for AF_INET, AF_INET6
 #include "alfwrapper/../../ebpf/common-data.h"  // for address6, subnet4
 
-static void parse_address4 (const char* input, address4* output) {
+static void parse_address4 (const char* input, struct address4* output) {
 	int r = inet_pton (AF_INET, input, output);
 
 	if (r != 1) {
@@ -20,10 +20,10 @@ static void parse_address4 (const char* input, address4* output) {
 	}
 
 	/* Yes, we want it that way */
-	*output = be32toh (*output);
+	output->raw = be32toh (output->raw);
 }
 
-static void parse_address6 (const char* input, address6* output) {
+static void parse_address6 (const char* input, struct address6* output) {
 	int r = inet_pton (AF_INET6, input, output);
 
 	if (r != 1) {
@@ -35,7 +35,7 @@ static void parse_address6 (const char* input, address6* output) {
 	output->low  = be64toh (output->low);
 }
 
-static void parse_subnet4 (const char* input, subnet4* output) {
+static void parse_subnet4 (const char* input, struct subnet4* output) {
 	char* copy _cleanup_free_ = string_duplicate (input);
 	char* data = copy;
 
@@ -44,7 +44,7 @@ static void parse_subnet4 (const char* input, subnet4* output) {
 	output->prefix = atoi (data);
 }
 
-static void parse_subnet6 (const char* input, subnet6* output) {
+static void parse_subnet6 (const char* input, struct subnet6* output) {
 	char* copy _cleanup_free_ = string_duplicate (input);
 	char* data = copy;
 
@@ -53,16 +53,16 @@ static void parse_subnet6 (const char* input, subnet6* output) {
 	output->prefix = atoi (data);
 }
 
-static void parse_interface (const char* input, interface* output) {
-	*output = if_nametoindex (input);
+static void parse_interface (const char* input, struct interface* output) {
+	output->raw = if_nametoindex (input);
 
-	if (*output == 0) {
+	if (output->raw == 0) {
 		die ("if_nametoindex(%s) failed", input);
 	}
 }
 
-static void parse_portnumber (const char* input, portnumber* output) {
-	*output = atoi (input);
+static void parse_portnumber (const char* input, struct portnumber* output) {
+	output->raw = atoi (input);
 }
 
 static void parse_uint8_t (const char* input, uint8_t* output) {
