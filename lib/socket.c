@@ -13,7 +13,7 @@ struct addrinfo* socket_lookup (const char* addr, const char* port, socktype typ
 
 	struct addrinfo hints = {
 		.ai_flags     = 0,
-		.ai_family    = 0,
+		.ai_family    = AF_INET6,
 		.ai_socktype  = type,
 		.ai_protocol  = 0,
 		.ai_addrlen   = 0,
