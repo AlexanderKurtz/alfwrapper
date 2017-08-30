@@ -4,7 +4,6 @@
 #include <alfwrapper/socket.h>  // for socktype
 
 typedef union __attribute__((packed)) {
-	socktype          socktype_member;
 	struct address4   address4_member;
 	struct address6   address6_member;
 	struct index      index_member;
