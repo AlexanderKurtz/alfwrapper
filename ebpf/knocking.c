@@ -4,12 +4,8 @@ BPF_TABLE ("hash", struct index,    struct portnumber, ports,     64);
 BPF_TABLE ("hash", struct address6, struct index,      database6, 64);
 
 uint32_t filter (struct __sk_buff *skb) {
-	uint32_t length    = skb->len;
-	uint32_t interface = skb->ingress_ifindex;
-	uint16_t protocol  = bpf_ntohs (skb->protocol);
-
-	struct ethernet_t* ethernet = (void*) bpf_ll_off;
-	struct tcp_t*      tcp      = (void*) 0;
+	uint16_t      protocol = bpf_ntohs (skb->protocol);
+	struct tcp_t* tcp      = (void*) 0;
 
 	if (protocol == protocol_ip6) {
 		struct ip6_t* ip6 = (void*) bpf_net_off;
