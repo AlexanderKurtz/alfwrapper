@@ -21,9 +21,9 @@ precisely what ```alfwrapper``` does.
 
 ## Why?
 
-While you can use classic system-level-firewalling or specific bind(2) parameters
-to limit which packets can reach your application, there are several use cases which neither
-of these options can cover:
+While you can use classic system-level-firewalling or specific bind(2)
+parameters to limit which packets can reach your application, there are several
+use cases which neither of these options can cover:
 
   1. As an **application developer** you'll typically want to bind(2) on the
      wildcard address (```::``` or ```0.0.0.0```) because these are always
