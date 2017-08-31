@@ -51,7 +51,7 @@ echo "Spawning a simple echo daemon on [::1]:4242 *with* aflwrapper with lots of
 	--set 'allow6,18,1::18/72' \
 	--set 'allow6,19,::1/128' \
 	\
-	ebpf/whitelist.c \
+	ebpf/subnets.c \
 	systemd-socket-activate --accept --inetd cat 1>/dev/null 2>/dev/null & daemon="${!}"
 
 # Wait for the server to become ready

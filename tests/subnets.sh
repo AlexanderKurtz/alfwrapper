@@ -2,5 +2,5 @@
 
 ./alfwrapper \
 	--set allow6,0,::1/128 \
-	ebpf/whitelist.c \
+	ebpf/subnets.c \
 	true
