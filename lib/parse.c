@@ -29,6 +29,11 @@ static void parse_subnet6 (const char* input, struct subnet6* output) {
 	char* data = copy;
 
 	char* prefix = strsep (&data, "/");
+
+	if (data == NULL) {
+		die ("parse_subnet6 (%s, %p): Input contains no slash", input, output);
+	}
+
 	parse_address6 (prefix, &output->address);
 	output->prefix = atoi (data);
 }
