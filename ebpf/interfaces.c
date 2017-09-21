@@ -1,6 +1,6 @@
 #include "common.h"
 
-#define MAX_INTERFACES (16)
+#define MAX_INTERFACES (115)
 
 BPF_TABLE ("hash", struct index, struct interface, interfaces, MAX_INTERFACES);
 

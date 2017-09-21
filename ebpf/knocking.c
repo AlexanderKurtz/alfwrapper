@@ -1,7 +1,7 @@
 #include "common.h"
 
-BPF_TABLE ("hash", struct index,    struct portnumber, ports,     64);
-BPF_TABLE ("hash", struct address6, struct index,      database6, 64);
+BPF_TABLE ("hash", struct index,    struct portnumber, ports,     162);
+BPF_TABLE ("hash", struct address6, struct index,      database6, 162);
 
 uint32_t filter (struct __sk_buff *skb) {
 	uint16_t      protocol = bpf_ntohs (skb->protocol);

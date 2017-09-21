@@ -1,6 +1,6 @@
 #include "common.h"
 
-#define MAX_SUBNETS (20)
+#define MAX_SUBNETS (23)
 
 BPF_TABLE ("hash", struct index, struct subnet6, allow6, MAX_SUBNETS);
 
