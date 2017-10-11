@@ -80,19 +80,20 @@ The ```ebpf/whitelist.c``` filter provides two maps called ```allow4``` and
 
 No, not really:
 
-	$ scripts/speedtest.sh 
+```
+$ scripts/speedtest.sh 
 
-	Spawning a simple echo daemon on [::1]:4242 *without* alfwrapper
+Spawning a simple echo daemon on [::1]:4242 *without* aflwrapper
 
-	Reading 1GB of data from /dev/zero through the echo daemon
-	0+120404 records in
-	0+120404 records out
-	1000000000 bytes (1.0 GB, 954 MiB) copied, 2.44531 s, 409 MB/s
+Reading 1GB of data from /dev/zero through the echo daemon
+0+122046 records in
+0+122046 records out
+1000000000 bytes (1.0 GB, 954 MiB) copied, 2.02915 s, 493 MB/s
 
-	Spawning a simple echo daemon on [::1]:4242 *with* alfwrapper with lots of rules
+Spawning a simple echo daemon on [::1]:4242 *with* aflwrapper with lots of rules
 
-	Reading 1GB of data from /dev/zero through the echo daemon
-	0+116955 records in
-	0+116955 records out
-	1000000000 bytes (1.0 GB, 954 MiB) copied, 2.54168 s, 393 MB/s
-	$ 
+Reading 1GB of data from /dev/zero through the echo daemon
+0+121980 records in
+0+121980 records out
+1000000000 bytes (1.0 GB, 954 MiB) copied, 2.10963 s, 474 MB/s
+```
